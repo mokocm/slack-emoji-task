@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: "slack-emoji-task"
+Globals:
+  Function:
+    Timeout: 3
+Resources:
+  lambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: app.index
+      Runtime: nodejs12.x
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DynamoDB
+      Events:
+        invoke:
+          Type: Api
+          Properties:
+            Path: /invoke
+            Method: any
+
+  DynamoDB:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: "trello-slack-thread"
+
+      AttributeDefinitions:
+        -
+          AttributeName: slack_ts
+          AttributeType: S
+        -
+          AttributeName: cardId
+          AttributeType: S
+      KeySchema:
+        -
+          AttributeName: slack_ts
+          KeyType: "HASH"
+        -
+          AttributeName: cardId
+          KeyType: "RANGE"
+
+      BillingMode: PAY_PER_REQUEST
