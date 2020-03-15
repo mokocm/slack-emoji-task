@@ -42,3 +42,8 @@ Resources:
           KeyType: "RANGE"
 
       BillingMode: PAY_PER_REQUEST
+
+Outputs:
+  Api:
+    Description: "API Gateway Endpoint"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/invoke/"
